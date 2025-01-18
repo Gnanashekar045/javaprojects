@@ -107,41 +107,93 @@
   </div>
 
   <script>
-    document.getElementById("addPostForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+
+    document.getElementById("addPostForm").addEventListener("submit", function(e) {
+      e.preventDefault()
       const content = document.getElementById("postContent").value;
-      socialMediaApp.addPost(content);
-      socialMediaApp.renderPosts();
-      e.target.reset(); 
-      
-    });
+      socialMediaApp.addPosts(content)
+      socialMediaApp.renderPost()
+      e.target.reset()
+    })
+
+    function editpostPromt(postId) {
+      const post = socialMediaApp.posts.find(post => post.id === postId);
+      if(post) {
+        const newContent = prompt("Edit the content", post.content)
+        if(newContent) {
+          socialMediaApp.editPost(postId, newContent)
+          socialMediaApp.renderPost()
+        }
+      }
+    }
+
+
 
 
     const socialMediaApp = {
-        posts: [],
+      posts: [],
 
-        addPost(content) {
-            const newPost = {
-                id: Date.now(),
-                content,
-                likes: 0,
-                comments: [],
-                date: new Date()
-            }
-            this.posts.push(newPost)
-            console.log(this.posts)
-        },
+      addPosts(content) {
+        const newPost = {
+          id: Date.now(),
+          content,
+          likes: 0,
+          Comment: [],
+          date: new Date()
+        }
+        this.posts.push(newPost)
+      },
 
-        editPost(postid, newContent) {
-            const post = posts.find(post => post.id === postid);
-            if(post) post.content = newContent
-        },
+      editPost(postId, newContent) {
+        console.log(postId, newContent)
+        const post = this.posts.find(post => post.id === postId);
+        if(post) post.content = newContent
+      },
 
-        
+      likePost(postId) {
+        const post = this.posts.find(post => post.id === postId);
+        if(post) post.likes++;
+      },
+
+      likeClone(postId) {
+        const post = this.posts.find(post => post.id === postId)
+        if(post) {
+          const clonedPost = {...post, id: Date.now(), date: new Date()}
+          this.posts.push(clonedPost)
+        }
+      },
+
+      comments(postId, comment) {
+        const post = this.posts.find(post => post.id === postId)
+        if(post) {
+          this.posts.comments.push(comment)
+        }
+      },
+
+
+      renderPost() {
+        const postsContainer = document.getElementById("postsContainer");
+        postsContainer.innerHTML = "";
+
+        this.posts.forEach(post => {
+          const postDiv = document.createElement("div");
+          postDiv.className="bg-white p-2 rounded shadow"
+          postDiv.innerHTML = `
+          <p class="post-content">${post.content}</p>
+          <div class="post-actions">
+            <span>${post.likes}</span>
+            <button onclick="socialMediaApp.likePost(${post.id}); socialMediaApp.renderPost()">Likes</button>
+            <button onclick="editpostPromt(${post.id})">Edit</button>
+            <button onclick="socialMediaApp.likeClone(${post.id}); socialMediaApp.renderPost()">Clone</button>
+          </div>
+          `;
+          postsContainer.appendChild(postDiv)
+        })
+      }
+
+
+      
     }
-    
-
-
   </script>
 </body>
 </html>
