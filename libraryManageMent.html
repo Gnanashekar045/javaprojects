@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <!-- <script src="app.js" defer></script> -->
+  <script src="app2.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <style>
+    /* Custom styles for buttons */
+    button {
+      background-color: #4CAF50; /* Green */
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Styling the form container */
+    #bookForm {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Styling the book list container */
+    #bookList div {
+      background-color: #f9fafb;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Styling book titles */
+    #bookList p:first-of-type {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    /* Styling availability status */
+    #bookList p:last-of-type {
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    /* Styling the page title */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    /* Custom input styles */
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    /* Styling container padding */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">Library Management System</h1>
+
+    <!-- Add Book Form -->
+    <div class="bg-white p-6 rounded shadow mb-6">
+      <form id="bookForm" class="space-y-4">
+        <input type="text" id="bookTitle" class="w-full px-3 py-2 border rounded-md" placeholder="Enter book title" required/>
+        <input type="text"id="bookAuthor" class="w-full px-3 py-2 border rounded-md" placeholder="Enter author name" required/>
+        <button type="submit" id="bookSubmitButton">Add Book</button>
+      </form>
+    </div>
+    <div id="bookList"></div>
+  </div>
+
+  <script>
+    const libraryManagement = {
+        books: [],
+      
+        addBook(title, author) {
+          const newBook = {
+            id: Date.now(),
+            title,
+            author,
+            isAvailable: true,
+          };
+      
+          this.books.push(newBook);
+          this.renderBooks();
+        },
+      
+        borrowBook(bookId) {
+          const book = this.books.find((book) => book.id === bookId);
+          if (book && book.isAvailable) {
+            book.isAvailable = false;
+            this.renderBooks();
+          } else {
+            alert("This book is currently unavailable!");
+          }
+        },
+      
+        returnBook(bookId) {
+          const book = this.books.find((book) => book.id === bookId);
+          if (book && !book.isAvailable) {
+            book.isAvailable = true;
+            this.renderBooks();
+          } else {
+            alert("This book is not currently borrowed!");
+          }
+        },
+      
+        filterAvailableBooks() {
+          return this.books.filter((book) => book.isAvailable);
+        },
+      
+        sortBooks() {
+          this.books.sort((a, b) => a.title.localeCompare(b.title));
+          this.renderBooks();
+        },
+      
+        renderBooks() {
+          const bookList = document.getElementById("bookList");
+          bookList.innerHTML = ""; 
+      
+          this.books.forEach((book) => {
+            const bookDiv = document.createElement("div");
+      
+            bookDiv.innerHTML = `
+                <p>${book.title} by ${book.author}</p>
+                <p>${book.isAvailable ? "Available" : "Borrowed"}</p>
+                <div>
+                  ${book.isAvailable
+                      ? `<button onclick="libraryManagement.borrowBook(${book.id})">Borrow</button>`
+                      : `<button onclick="libraryManagement.returnBook(${book.id})">Return</button>`
+                   }
+                </div>
+              `;
+      
+            bookList.appendChild(bookDiv);
+          });
+        },
+      };
+      
+      document.getElementById("bookForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+      
+        const title = document.getElementById("bookTitle").value.trim();
+        const author = document.getElementById("bookAuthor").value.trim();
+      
+        libraryManagement.addBook(title, author);
+        e.target.reset()
+      });
+  </script>
+</body>
+</html>
