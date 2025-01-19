@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* Custom CSS for the cart items (li-clas) */
-    .li-clas {
+    .li-class {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -16,12 +16,12 @@
       border-bottom: 1px solid #e0e0e0;
     }
     
-    .li-clas span {
+    .li-class span {
       font-size: 1rem;
       font-weight: 500;
     }
     
-    .li-clas div {
+    .li-class div {
       display: flex;
       align-items: center;
     }
@@ -84,65 +84,18 @@
 
 <script>
     const cart = {
-        items: [],
-        
-        addProduct(Product) {
-            const exists = this.items.find(item => item.id === Product.id);
-            if(!exists) this.items.push(Product);
-            console.log(this.items)
-        },
+      posts:[],
 
-        removeProduct(productId) {
-            this.items = this.items.filter(item => item.id !== productId)
-        },
+      addpost() {},
 
-        calculateTotal() {
-            return this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
-        },
+      removePost() {},
 
-        renderCart() {
-            const cartItems = document.getElementById("cartItems");
-            cartItems.innerHTML = "";
-        
-            this.items.forEach((item) => {
-              const li = document.createElement("li");
-              li.className = "li-clas"
-              li.innerHTML = `
-                  <span>${item.name}</span>
-                  <div>
-                    <span class="mr-4">$${item.price}</span>
-                    <button class="class-button" onclick="removeFromCartI(${item.id})">Remove</button>
-                  </div>
-                `;
-              cartItems.appendChild(li);
-            });
-        
-            document.getElementById("totalPrice").textContent = this.calculateTotal();
-          },
+      calculateTotal() {},
 
-
+      renderPost() {}
     }
 
-    document.getElementById("addProductForm").addEventListener("submit", addProduct);
-
-    function addProduct(e) {
-        e.preventDefault();
-      
-        const productName = document.getElementById("productName").value;
-        const productPrice = parseFloat(document.getElementById("productPrice").value);
-        const productQuantity = parseFloat(document.getElementById("productQuantity").value);
-        const productId = Date.now();
-      
-        const newProduct = { id: productId, name: productName, price: productPrice, quantity: productQuantity };
-        cart.addProduct(newProduct);
-        cart.renderCart()
-        e.target.reset();
-      }
-
-      function removeFromCartI(productId) {
-        cart.removeProduct(productId)
-        cart.renderCart()
-      }
+    document.getElementById("addProductForm").addEventListener("submit", add)
         
 </script>
 </html>
