@@ -91,20 +91,24 @@
 <script>
   const cart = {
     items: [],
-    
+
     addProduct(product) {
       const exists = this.items.find(item => item.id === product.id);
       if(!exists) this.items.push(product)
       console.log(this.items)
+    },    
+
+    removeProcut(productId) {
+      this.items = this.items.filter(item => item.id !== productId)
     },
 
-    removeProduct() {},
+    calculateTotal() {
+      return this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
+    },
 
-    calculateTotal() {},
-
-    renderProducts() {
+    renderProcuts() {
       const cartItems = document.getElementById("cartItems");
-      cartItems.innerHTML ="";
+      cartItems.innerHTML = "";
 
       this.items.forEach((item)=>{
         const li = document.createElement("li");
@@ -117,9 +121,9 @@
         </div>
         `;
         cartItems.appendChild(li)
-      })
+      });
       document.getElementById("totalPrice").textContent = this.calculateTotal()
-    },
+    }
 
   }
 
@@ -130,19 +134,22 @@
 
     const productId = Date.now();
     const productName = document.getElementById("productName").value;
-    const productPrice = parseFloat(document.getElementById("productPrice").value)
+    const productPrice = parseFloat(document.getElementById("productPrice").value);
     const productQuantity = parseFloat(document.getElementById("productQuantity").value)
 
-    const newProduct = {id: productId, name: productName, price: productPrice, quantity: productQuantity}
+    const newProcuct = {id: productId, name: productName, price: productPrice,quantity: productQuantity};
 
-    cart.addProduct(newProduct)
+    cart.addProduct(newProcuct)
+    cart.renderProcuts()
+
+    e.target.reset()
   }
 
   function removeFromCart(productId) {
-    removeProduct
+    cart.removeProcut(productId)
+    cart.renderProcuts()
   }
 
-  
 
 </script>
 
