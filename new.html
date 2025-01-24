@@ -46,48 +46,56 @@
         //"p-4 border rounded flex justify-between items-center";//
         let library = []
 
-        const createBook = (id, title, author, status) => {
-            return {id, title, author, status}
+        const createBook = ({id, title, author, status}) => {
+            return {
+                id,
+                title,
+                author,
+                status
+            }
         }
 
-        const fetchData = async() => {
-            const response = await fetch("https://openlibrary.org/subjects/science.json?limit=5")
-            const data = await response.json()
+        const fetchBooks = async() => {
+            const response = await fetch("https://openlibrary.org/subjects/science.json?limit=5");
+            const data = await response.json();
 
             library = data.works.map((book) => {
                 return createBook({
                     id: book.key,
                     title: book.title,
                     author: book.authors?.[0]?.name || "Unknown",
-                    status: "Available",
-                });
+                    status: "Available"
+                })
             });
             renderBooks()
         }
 
-        document.addEventListener("DOMContentLoaded", fetchData)
+        document.addEventListener("DOMContentLoaded", fetchBooks)
 
         const renderBooks = () => {
             const booksContainer = document.getElementById("books");
-            booksContainer.className = "";
+            booksContainer.innerHTML = "";
 
             library.forEach((book) => {
                 const bookElement = document.createElement("div");
                 bookElement.className = "p-4 border rounded flex justify-between items-center";
-                bookElement.innerHTML =  `
+                bookElement.innerHTML = `
                 <div>
-                    <p><strong>title:</strong>${book.title}</p>
-                    <p><strong>author:</strong>${book.author}</p>
-                    <p><strong>status:</strong>${book.status}</p>
+                    <p><strong>title:</strong> ${book.title}</p>
+                    <p><strong>author:</strong> ${book.author}</p>
+                    <p><strong>status:</strong> ${book.status}</p>
                 </div>
                 <div>
-                    <button class="lend-button" onclick="lendBook(${book.id})">Lend</button>
-                    <button class="return-button" onclick="returnBook(${book.id})">Return</button>
+                    <button class="lend-button" onclick="lendBook(${book.id})">lendBook</button>
+                    <button class="return-button" onclick="returnBook(${book.id})">ReturnBook</button>
                 </div>
                 `;
-                booksContainer.appendChild(bookElement);
+                booksContainer.appendChild(bookElement)
             })
+
+
         }
+
 
     </script>
 </body>
