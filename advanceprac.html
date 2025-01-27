@@ -118,7 +118,7 @@
         const returnBook = (bookId) => {
             const book = library.find((b) => b.id === bookId);
             if (book && book.status === "Lent Out") {
-                const duration = lendingTracker.returnBook(bookId);
+                createLendingTracker().returnBook(bookId);
                 book.setStatus("Available");
                 renderBooks();
             } else {
