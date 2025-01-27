@@ -87,22 +87,6 @@
             }
         };
 
-        const createLendingTracker = () => {
-            const lendingDurations = new Map();
-            return {
-                lendBook: (bookId) => {
-                    lendingDurations.set(bookId, Date.now());
-                },
-                returnBook: (bookId) => {
-                    const lendTime = lendingDurations.get(bookId);
-                    const duration = lendTime ? (Date.now() - lendTime) / 1000 : 0;
-                    lendingDurations.delete(bookId);
-                    return duration.toFixed(2);
-                },
-            };
-        };
-
-        const lendingTracker = createLendingTracker();
 
         const renderBooks = () => {
             const booksContainer = document.getElementById("books");
@@ -127,27 +111,7 @@
             });
         };
 
-        const lendBook = (bookId) => {
-            const book = library.find((b) => b.id === bookId);
-            if (book && book.status === "Available") {
-                book.setStatus("Lent Out");
-                lendingTracker.lendBook(bookId);
-                renderBooks();
-            } else {
-                alert("Book is not available!");
-            }
-        };
-
-        const returnBook = (bookId) => {
-            const book = library.find((b) => b.id === bookId);
-            if (book && book.status === "Lent Out") {
-                book.setStatus("Available");
-                const duration = lendingTracker.returnBook(bookId);
-                renderBooks();
-            } else {
-                alert("Book is not available!");
-            }
-        };
+        
 
         document.addEventListener("DOMContentLoaded", fetchBooks);
 
